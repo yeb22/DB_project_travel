@@ -1,0 +1,37 @@
+CREATE TABLE Users(
+    uID INTEGER PRIMARY KEY AUTOINCREMENT, --사용자 아이디
+    uName TEXT NOT NULL, -- 사용자 이름
+    preference TEXT -- 여행 취향
+);
+CREATE TABLE UDate(
+    dateID INTEGER PRIMARY KEY AUTOINCREMENT,
+    uID INTEGER NOT NULL,
+    date TEXT NOT NULL, -- 가능한 날짜
+    FOREIGN KEY (uID) REFERENCES Users(uID) ON DELETE CASCADE
+);
+CREATE TABLE Groups(
+    gID INTEGER PRIMARY KEY AUTOINCREMENT,
+    gName TEXT NOT NULL, -- 그룹 이름
+    budget INTEGER, -- 1인당 예산
+    cnt_members INTEGER -- 인원 수
+);
+CREATE TABLE Group_members (
+    gmID INTEGER PRIMARY KEY AUTOINCREMENT,
+    gID INTEGER NOT NULL,
+    uID INTEGER NOT NULL,
+    FOREIGN KEY (gID) REFERENCES Groups(gID) ON DELETE CASCADE,
+    FOREIGN KEY (uID) REFERENCES Users(uID) ON DELETE CASCADE
+);
+CREATE TABLE Destinations(
+    destID INTEGER PRIMARY KEY AUTOINCREMENT,
+    dest_Name TEXT, -- 도시 이름
+    country TEXT, -- 나라 이름
+    Dest_type TEXT, -- 여행 테마
+    Dest_cost INTEGER -- 물가
+);
+CREATE TABLE RecommendMonth(
+    rmID INTEGER PRIMARY KEY AUTOINCREMENT,
+    destID INTEGER NOT NULL,
+    month INTEGER NOT NULL,
+    FOREIGN KEY (destID) REFERENCES Destinations(destID) ON DELETE CASCADE
+);
