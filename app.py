@@ -170,6 +170,31 @@ def createDate():
     db.close()
     return redirect(url_for('showDates'))
 
+#commom dates
+@app.route('/groups/<int:gID>/common_dates/')
+def commonDates(gID):
+    db = sqlite3.connect('db.sqlite')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    group = cursor.execute(
+        "SELECT gName FROM Groups WHERE gID = ?",
+        (gID,)
+    ).fetchone()
+
+    with open('sql/common_dates.sql', 'r', encoding='utf-8') as f:
+        sql = f.read()
+
+    common_dates = cursor.execute(sql, (gID, gID)).fetchall()
+    db.close()
+
+    return render_template(
+        'common_dates.html',
+        group=group,
+        gID=gID,
+        common_dates=common_dates
+    )
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='127.0.0.1',port=5000)

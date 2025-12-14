@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>공통 날짜</title>
+</head>
+<body>
+
+  <p>
+    <a href="/groups/">그룹 목록</a> |
+    <a href="/group_members/">그룹 멤버</a> |
+    <a href="/dates/">가능 날짜</a>
+  </p>
+
+  <h1>공통 날짜</h1>
+
+  {% if group %}
+    <p>그룹 이름: <strong>{{ group['gName'] }}</strong></p>
+  {% endif %}
+
+  {% if common_dates %}
+    <ul>
+      {% for d in common_dates %}
+        <li>{{ d['date'] }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>모든 사용자가 가능한 공통 날짜가 없습니다.</p>
+  {% endif %}
+
+</body>
+</html>
