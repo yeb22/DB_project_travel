@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>사용자 목록</title>
+    </head>
+    <body>
+        <h1>사용자 목록</h1>
+        {% if users %}
+        <ul>
+        {% for user in users %}
+            <li>
+                {{ user['uName'] }} /
+                취향: {{ user['preference'] }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>등록된 사용자가 없습니다.</p>
+    {% endif %}
+    
+    </body>
+</html>
