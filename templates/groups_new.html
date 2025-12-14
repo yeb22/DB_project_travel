@@ -11,9 +11,18 @@
     <p>
       그룹 이름: <input type="text" name="gName" required>
     </p>
+    
     <p>
-      1인당 예산: <input type="number" name="budget" min="0">
+    1인당 예산(레벨):
+    <select name="budget" required>
+    <option value="1">1 (저예산)</option>
+    <option value="2">2</option>
+    <option value="3">3 (보통)</option>
+    <option value="4">4</option>
+    <option value="5">5 (고예산)</option>
+    </select>
     </p>
+
     <p>
       인원 수: <input type="number" name="cnt_members" min="1">
     </p>
