@@ -4,7 +4,7 @@ import sqlite3
 app=Flask(__name__)
 
 @app.route('/')
-@app.route('/users')
+@app.route('/users/')
 def showUsers():
     db=sqlite3.connect('db.sqlite')
     db.row_factory = sqlite3.Row
