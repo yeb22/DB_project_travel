@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>사용자 추가</title>
+</head>
+<body>
+  <h1>사용자 추가</h1>
+
+  <form action="/users/create/" method="post">
+    <p>
+      이름: <input type="text" name="uName" required>
+    </p>
+    <p>
+      여행 취향: <input type="text" name="preference">
+    </p>
+    <button type="submit">저장</button>
+  </form>
+
+  <p><a href="/users/">사용자 목록으로</a></p>
+</body>
+</html>
