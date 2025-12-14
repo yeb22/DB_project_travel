@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>가능 날짜 추가</title>
+</head>
+<body>
+  <h1>가능 날짜 추가</h1>
+
+  <form action="/dates/create/" method="post">
+    <p>
+      사용자 선택:
+      <select name="uID" required>
+        {% for u in users %}
+          <option value="{{ u['uID'] }}">
+            {{ u['uName'] }}
+          </option>
+        {% endfor %}
+      </select>
+    </p>
+
+    <p>
+      날짜:
+      <input type="date" name="date" required>
+    </p>
+
+    <button type="submit">저장</button>
+  </form>
+
+  <p><a href="/dates/">날짜 목록으로</a></p>
+</body>
+</html>

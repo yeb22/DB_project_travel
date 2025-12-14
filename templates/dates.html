@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>가능 날짜 목록</title>
+    </head>
+    <body>
+        <p>
+            <a href="/dates/new/">+가능 날짜 추가</a>
+            <a href="/users/">사용자</a> |
+            <a href="/groups/">그룹</a>
+        </p>
+        <h1>가능 날짜 목록</h1>
+
+        {% if rows %}
+        <ul>
+            {% for r in rows %}
+            <li>{{r['uName']}}:{{r['date']}}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>등록된 날짜가 없습니다.</p>
+        {% endif %}
+    </body>
+</html>

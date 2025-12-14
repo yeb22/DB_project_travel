@@ -123,7 +123,52 @@ def createGroupMember():
     db.close()
     return redirect(url_for('showGroupMembers'))
 
+#date
+@app.route('/dates/')
+def showDates():
+    db = sqlite3.connect('db.sqlite')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
 
+    rows = cursor.execute("""
+        SELECT d.dateID, u.uName, d.date
+        FROM UDate d
+        JOIN Users u ON d.uID = u.uID
+        ORDER BY d.date
+    """).fetchall()
+
+    db.close()
+    return render_template('dates.html', rows=rows)
+
+@app.route('/dates/new/')
+def newDate():
+    db = sqlite3.connect('db.sqlite')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    users = cursor.execute(
+        "SELECT uID, uName FROM Users ORDER BY uID"
+    ).fetchall()
+
+    db.close()
+    return render_template('dates_new.html', users=users)
+
+@app.route('/dates/create/', methods=['POST'])
+def createDate():
+    uID = request.form['uID']
+    date = request.form['date']
+
+    db = sqlite3.connect('db.sqlite')
+    cursor = db.cursor()
+
+    cursor.execute(
+        "INSERT INTO UDate (uID, date) VALUES (?, ?)",
+        (uID, date)
+    )
+
+    db.commit()
+    db.close()
+    return redirect(url_for('showDates'))
 
 if __name__ == '__main__':
     app.debug = True
