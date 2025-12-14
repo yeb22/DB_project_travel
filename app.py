@@ -38,6 +38,41 @@ def createUser():
     db.close()
     return redirect(url_for('showUsers'))
 
+@app.route('/groups/')
+def showGroups():
+    db = sqlite3.connect('db.sqlite')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    groups = cursor.execute(
+        'SELECT gID, gName, budget, cnt_members FROM Groups'
+    ).fetchall()
+
+    db.close()
+    return render_template('groups.html', groups=groups)
+
+@app.route('/groups/new/')
+def newGroup():
+    return render_template('groups_new.html')
+
+@app.route('/groups/create/', methods=['POST'])
+def createGroup():
+    gname=request.form['gName']
+    budget=request.form['budget']
+    cnt=request.form['cnt_members']
+
+    db = sqlite3.connect('db.sqlite')
+    cursor = db.cursor()
+
+    cursor.execute(
+        'INSERT INTO Groups (gName, budget, cnt_members) VALUES (?, ?, ?)',
+        (gname, budget, cnt)
+    )
+
+    db.commit()
+    db.close()
+    return redirect(url_for('showGroups'))
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='127.0.0.1',port=5000)

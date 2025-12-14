@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>그룹 목록</title>
+</head>
+<body>
+  <p><a href="/groups/new/">+ 그룹 추가</a> | <a href="/users/">사용자 목록</a></p>
+
+  <h1>그룹 목록</h1>
+
+  {% if groups %}
+    <ul>
+    {% for g in groups %}
+      <li>
+        {{ g['gName'] }} /
+        예산(1인): {{ g['budget'] }} /
+        인원: {{ g['cnt_members'] }}
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>등록된 그룹이 없습니다.</p>
+  {% endif %}
+</body>
+</html>
