@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>그룹에 사용자 추가</title>
+</head>
+<body>
+  <h1>그룹에 사용자 추가</h1>
+
+  <form action="/group_members/create/" method="post">
+    <p>
+      그룹 선택:
+      <select name="gID" required>
+        {% for g in groups %}
+          <option value="{{ g['gID'] }}">{{ g['gName'] }}</option>
+        {% endfor %}
+      </select>
+    </p>
+
+    <p>
+      사용자 선택:
+      <select name="uID" required>
+        {% for u in users %}
+          <option value="{{ u['uID'] }}">{{ u['uName'] }}</option>
+        {% endfor %}
+      </select>
+    </p>
+
+    <button type="submit">추가</button>
+  </form>
+
+  <p><a href="/group_members/">그룹 멤버 목록으로</a></p>
+</body>
+</html>

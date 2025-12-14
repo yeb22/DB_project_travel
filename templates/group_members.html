@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>그룹 멤버 목록</title>
+</head>
+<body>
+  <p>
+    <a href="/group_members/new/">+ 그룹에 사용자 추가</a> |
+    <a href="/users/">사용자</a> |
+    <a href="/groups/">그룹</a>
+  </p>
+
+  <h1>그룹 멤버 목록</h1>
+
+  {% if rows %}
+    <ul>
+    {% for r in rows %}
+      <li>[{{ r['gName'] }}] - {{ r['uName'] }}</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>아직 그룹에 추가된 사용자가 없습니다.</p>
+  {% endif %}
+</body>
+</html>

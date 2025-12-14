@@ -3,6 +3,7 @@ import sqlite3
 
 app = Flask(__name__, template_folder="templates")
 
+#user
 @app.route('/')
 @app.route('/users/')
 def showUsers():
@@ -38,6 +39,7 @@ def createUser():
     db.close()
     return redirect(url_for('showUsers'))
 
+#group
 @app.route('/groups/')
 def showGroups():
     db = sqlite3.connect('db.sqlite')
@@ -72,6 +74,56 @@ def createGroup():
     db.commit()
     db.close()
     return redirect(url_for('showGroups'))
+
+#group members
+
+@app.route('/group_members/')
+def showGroupMembers():
+    db = sqlite3.connect('db.sqlite')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    rows = cursor.execute("""
+        SELECT gm.gmID, g.gName, u.uName
+        FROM Group_members gm
+        JOIN Groups g ON gm.gID = g.gID
+        JOIN Users u ON gm.uID = u.uID
+        ORDER BY gm.gmID DESC
+    """).fetchall()
+
+    db.close()
+    return render_template('group_members.html', rows=rows)
+
+@app.route('/group_members/new/')
+def newGroupMember():
+    db = sqlite3.connect('db.sqlite')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    groups = cursor.execute("SELECT gID, gName FROM Groups ORDER BY gID DESC").fetchall()
+    users = cursor.execute("SELECT uID, uName FROM Users ORDER BY uID DESC").fetchall()
+
+    db.close()
+    return render_template('group_members_new.html', groups=groups, users=users)
+
+@app.route('/group_members/create/', methods=['POST'])
+def createGroupMember():
+    gID = request.form['gID']
+    uID = request.form['uID']
+
+    db = sqlite3.connect('db.sqlite')
+    cursor = db.cursor()
+
+    cursor.execute(
+        "INSERT INTO Group_members (gID, uID) VALUES (?, ?)",
+        (gID, uID)
+    )
+
+    db.commit()
+    db.close()
+    return redirect(url_for('showGroupMembers'))
+
+
 
 if __name__ == '__main__':
     app.debug = True
