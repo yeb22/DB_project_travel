@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>여행지 추천</title>
+    </head>
+    <body>
+        <h1>
+            여행지 추천
+        </h1>
+        <p>그룹: <strong>{{group['gName']}}</strong></p>
+        
+        {% if months %}
+        <p>공통 가능 월: {{months | join(',')}}월</p>
+        {% if rows %}
+        <ul>
+            {% for r in rows %}
+            <li>
+                {{r['dest_Name']}} ({{r['country']}})/
+                {{r['Dest_type']}}/
+                물가 레벨 {{r['Dest_cost']}}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>조건에 맞는 여행지가 없습니다.</p>
+        {% endif %}
+        {% else %}
+        <p>공통 날짜가 없어 추천할 수 없습니다.</p>
+        {% endif %}
+    </body>
+</html>
