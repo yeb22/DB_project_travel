@@ -196,59 +196,55 @@ def commonDates(gID):
         common_dates=common_dates
     )
 #recommendation
-@app.routr("/groups/<int:gID>/recommend/")
+@app.route("/groups/<int:gID>/recommend/")
 def recommendByGroup(gID):
     db = sqlite3.connect("db.sqlite")
     db.row_factory = sqlite3.Row
     cursor = db.cursor()
 
     group = cursor.execute(
-        "SELCET gID,gName,budget FROM Groups WHERE gID=?",(gID,)
-    ).fetchall()
+        "SELECT gID, gName, budget FROM Groups WHERE gID = ?",
+        (gID,)
+    ).fetchone()
 
     if not group:
         db.close()
-        return "Group not found",404
-    
-    with open("sql/common_dates.sql","r",encoding="utf-8")as f:
-        common_dates = cursor.execute(common_sql,(gID,gID)).fetchall()
+        return "Group not found", 404
+
+    with open("sql/common_dates.sql", "r", encoding="utf-8") as f:
+        common_sql = f.read()
+
+    common_dates = cursor.execute(common_sql, (gID, gID)).fetchall()
 
     if not common_dates:
         db.close()
-        return render_template(
-            "recommend.html",
-            group=group,
-            months=[]
-            rows=[]
-        )
-    #공통 날짜 월 추출
+        return render_template("recommend.html", group=group, months=[], rows=[])
+
+    # 공통 날짜에서 월 추출
     months = sorted({
-        int (row["data"].split("-")[1])
+        int(row["date"].split("-")[1])
         for row in common_dates
     })
-    #예산 레벨
+
     budget_level = group["budget"] if group["budget"] is not None else 5
-    #여행지 추천
-    placeholders=",".join("?" for _ in months)
+
+    placeholders = ",".join("?" for _ in months)
 
     query = f"""
-        SELECT DISTINCT d.dest_Name, d.country, d.Dest_type,d.Dest_cost
+        SELECT DISTINCT d.dest_Name, d.country, d.Dest_type, d.Dest_cost
         FROM Destinations d
         WHERE d.destID IN (
             SELECT destID FROM RecommendMonth
             WHERE month IN ({placeholders})
         )
         AND d.Dest_cost <= ?
-        ORDER BY d.Dest_cost,d.dset_Name;
+        ORDER BY d.Dest_cost, d.dest_Name;
     """
-    rows = cursor.execute(query,(*months,budget_level)).fetchall()
+
+    rows = cursor.execute(query, (*months, budget_level)).fetchall()
     db.close()
-    return render_template(
-        "recommend.html",
-        group=group,
-        months=months,
-        rows=rows
-    )
+
+    return render_template("recommend.html", group=group, months=months, rows=rows)
 
 if __name__ == '__main__':
     app.debug = True
