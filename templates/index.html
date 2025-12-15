@@ -20,7 +20,14 @@
     <ul>
       {% for g in groups %}
         <li>
-          <a href="/groups/{{ g['gID'] }}">{{ g['gName'] }}</a>
+            <a href="/groups/{{ g['gID'] }}">{{ g['gName'] }}</a>
+
+            <form action="/groups/{{ g['gID'] }}/delete/" method="post" style="display:inline;">
+                <input type="hidden" name="next_url" value="/">
+                <button type="submit" onclick="return confirm('이 그룹을 삭제할까요?')">
+                    삭제
+                </button>
+            </form>
         </li>
       {% endfor %}
     </ul>
@@ -31,8 +38,14 @@
     <a href="/users/new/">+ 사용자 추가</a>
     <ul>
       {% for u in users %}
-        <li>{{ u['uName'] }}</li>
-      {% endfor %}
+        <li>
+            {{ u['uName'] }}
+            <form action="/users/{{ u['uID'] }}/delete/" method="post" style="display:inline;">
+                <input type="hidden" name="next_url" value="/">
+                <button type="submit" onclick="return confirm('이 사용자를 삭제할까요?')">삭제</button>
+            </form>
+        </li>
+       {% endfor %}
     </ul>
   </div>
 </div>

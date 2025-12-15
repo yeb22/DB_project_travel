@@ -11,7 +11,14 @@
   {% if dates %}
     <ul>
     {% for d in dates %}
-      <li>{{ d['date'] }} ({{ d['uName'] }})</li>
+      <li>
+        {{ d['date'] }} ({{ d['uName'] }})
+
+        <form action="/dates/{{ d['dateID'] }}/delete/" method="post" style="display:inline;">
+            <input type="hidden" name="next_url" value="/groups/{{ group['gID'] }}/dates/">
+            <button type="submit" onclick="return confirm('이 날짜를 삭제할까요?')">삭제</button>
+        </form>
+      </li>
     {% endfor %}
     </ul>
   {% else %}
