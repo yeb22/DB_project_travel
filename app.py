@@ -246,23 +246,40 @@ def recommendByGroup(gID):
         db.close()
         return "Group not found", 404
 
+    pref_rows = cursor.execute("""
+        SELECT u.preference AS preference, COUNT(*) AS cnt
+        FROM Group_members gm
+        JOIN Users u ON gm.uID = u.uID
+        WHERE gm.gID = ?
+          AND u.preference IS NOT NULL
+          AND TRIM(u.preference) <> ''
+        GROUP BY u.preference
+        ORDER BY cnt DESC
+    """, (gID,)).fetchall()
+
+    top_preferences = []
+    if pref_rows:
+        max_cnt = pref_rows[0]["cnt"]
+        top_preferences = [r["preference"] for r in pref_rows if r["cnt"] == max_cnt]
+
     with open("sql/common_dates.sql", "r", encoding="utf-8") as f:
         common_sql = f.read()
-
     common_dates = cursor.execute(common_sql, (gID, gID)).fetchall()
 
     if not common_dates:
         db.close()
-        return render_template("recommend.html", group=group, months=[], rows=[])
+        return render_template(
+            "recommend.html",
+            group=group,
+            months=[],
+            rows=[],
+            top_preferences=top_preferences,
+            has_preference_match=False
+        )
 
-    # 공통 날짜에서 월 추출
-    months = sorted({
-        int(row["date"].split("-")[1])
-        for row in common_dates
-    })
+    months = sorted({int(row["date"].split("-")[1]) for row in common_dates})
 
     budget_level = group["budget"] if group["budget"] is not None else 5
-
     placeholders = ",".join("?" for _ in months)
 
     query = f"""
@@ -275,11 +292,22 @@ def recommendByGroup(gID):
         AND d.Dest_cost <= ?
         ORDER BY d.Dest_cost, d.dest_Name;
     """
-
     rows = cursor.execute(query, (*months, budget_level)).fetchall()
-    db.close()
 
-    return render_template("recommend.html", group=group, months=months, rows=rows)
+    has_preference_match = False
+    if top_preferences:
+        has_preference_match = any(r["Dest_type"] in top_preferences for r in rows)
+
+    db.close()
+    return render_template(
+        "recommend.html",
+        group=group,
+        months=months,
+        rows=rows,
+        top_preferences=top_preferences,
+        has_preference_match=has_preference_match
+    )
+
 #첫 페이지
 @app.route("/")
 def index():

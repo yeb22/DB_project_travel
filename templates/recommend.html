@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="utf-8">
-        <title>여행지 추천</title>
-    </head>
-    <body>
+<head>
+  <meta charset="utf-8">
+  <title>여행지 추천</title>
+</head>
+<body>
 
-        <h1>
-            여행지 추천
-        </h1>
-        <p>그룹: <strong>{{group['gName']}}</strong></p>
-        
-        {% if months %}
-        <p>공통 가능 월: {{months | join(',')}}월</p>
-        {% if rows %}
-        <ul>
-            {% for r in rows %}
-            <li>
-                {{r['dest_Name']}} ({{r['country']}})/
-                {{r['Dest_type']}}/
-                물가 레벨 {{r['Dest_cost']}}
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>조건에 맞는 여행지가 없습니다.</p>
-        {% endif %}
-        {% else %}
-        <p>공통 날짜가 없어 추천할 수 없습니다.</p>
-        {% endif %}
-        <p><a href="/groups/{{ group['gID'] }}">← 그룹 상세로 돌아가기</a></p>
-    </body>
+  <h1>여행지 추천</h1>
+  <p>그룹: <strong>{{ group['gName'] }}</strong></p>
+
+  {% if months %}
+    <p>공통 가능 월: {{ months | join(',') }}월</p>
+
+    {% if top_preferences and has_preference_match %}
+      <p>
+        {{ months[0] }}월 후보 중에, 그룹 멤버 다수 취향(<strong>{{ top_preferences | join(', ') }}</strong>)과
+        맞는 여행지가 포함되어 있어요.
+      </p>
+    {% endif %}
+
+    {% if rows %}
+      <ul>
+        {% for r in rows %}
+          <li>
+            {{ r['dest_Name'] }} ({{ r['country'] }}) /
+            {{ r['Dest_type'] }} /
+            물가 레벨 {{ r['Dest_cost'] }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>조건에 맞는 여행지가 없습니다.</p>
+    {% endif %}
+
+  {% else %}
+    <p>공통 날짜가 없어 추천할 수 없습니다.</p>
+  {% endif %}
+
+  <p><a href="/groups/{{ group['gID'] }}">← 그룹 상세로 돌아가기</a></p>
+
+</body>
 </html>
