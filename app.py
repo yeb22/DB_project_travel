@@ -86,10 +86,10 @@ def showGroupMembers():
 
     rows = cursor.execute("""
         SELECT gm.gmID, g.gName, u.uName
-        FROM Group_members gm
-        JOIN Groups g ON gm.gID = g.gID
-        JOIN Users u ON gm.uID = u.uID
-        ORDER BY gm.gmID DESC
+        FROM Group_members gm, Groups g, Users u
+        WHERE gm.gID = g.gID
+        AND gm.uID = u.uID
+        ORDER BY gm.gmID DESC;
     """).fetchall()
 
     db.close()
@@ -152,9 +152,9 @@ def showDates():
 
     rows = cursor.execute("""
         SELECT d.dateID, u.uName, d.date
-        FROM UDate d
-        JOIN Users u ON d.uID = u.uID
-        ORDER BY d.date
+        FROM UDate d, Users u
+        WHERE d.uID = u.uID
+        ORDER BY d.date;
     """).fetchall()
 
     db.close()
@@ -170,11 +170,14 @@ def newDate():
 
     if gID:
         users = cursor.execute("""
-            SELECT u.uID, u.uName
-            FROM Group_members gm
-            JOIN Users u ON gm.uID = u.uID
-            WHERE gm.gID = ?
-            ORDER BY u.uName
+        SELECT uID, uName
+        FROM Users
+        WHERE uID IN (
+            SELECT uID
+            FROM Group_members
+            WHERE gID = ?
+        )
+        ORDER BY uName;
         """, (gID,)).fetchall()
     else:
         users = cursor.execute(
@@ -247,14 +250,17 @@ def recommendByGroup(gID):
         return "Group not found", 404
 
     pref_rows = cursor.execute("""
-        SELECT u.preference AS preference, COUNT(*) AS cnt
-        FROM Group_members gm
-        JOIN Users u ON gm.uID = u.uID
-        WHERE gm.gID = ?
-          AND u.preference IS NOT NULL
-          AND TRIM(u.preference) <> ''
-        GROUP BY u.preference
-        ORDER BY cnt DESC
+        SELECT preference, COUNT(*) AS cnt
+        FROM Users
+        WHERE uID IN (
+            SELECT uID
+            FROM Group_members
+            WHERE gID = ?
+    )
+    AND preference IS NOT NULL
+    AND TRIM(preference) <> ''
+    GROUP BY preference
+    ORDER BY cnt DESC;
     """, (gID,)).fetchall()
 
     top_preferences = []
@@ -337,11 +343,14 @@ def groupDetail(gID):
         return "Group not found", 404
 
     members = cursor.execute("""
-        SELECT u.uID, u.uName
-        FROM Group_members gm
-        JOIN Users u ON gm.uID = u.uID
-        WHERE gm.gID = ?
-        ORDER BY u.uName
+        SELECT uID, uName
+        FROM Users
+        WHERE uID IN (
+            SELECT uID
+            FROM Group_members
+            WHERE gID = ?
+        )
+        ORDER BY uName;
     """, (gID,)).fetchall()
 
     db.close()
@@ -364,11 +373,14 @@ def groupDates(gID):
 
     dates = cursor.execute("""
     SELECT d.dateID, u.uName, d.date
-    FROM Group_members gm
-    JOIN Users u ON gm.uID = u.uID
-    JOIN UDate d ON d.uID = u.uID
-    WHERE gm.gID = ?
-    ORDER BY d.date, u.uName
+    FROM UDate d, Users u
+    WHERE d.uID = u.uID
+        AND d.uID IN (
+            SELECT uID
+            FROM Group_members
+            WHERE gID = ?
+        )
+    ORDER BY d.date, u.uName;
     """, (gID,)).fetchall()
 
 
