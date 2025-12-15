@@ -3,13 +3,31 @@
 <head>
   <meta charset="utf-8">
   <title>그룹 상세</title>
+ <style>
+  html{
+      font-size: 25px;
+    }
+  body{
+    text-align: center;
+  }
+  ul{
+    list-style-position: inside;
+    padding: 0;
+    text-align: center;
+  }
+  .mycolor{
+    color: #29abc2;
+  }
+</style>
 </head>
 <body>
 
   <h1>{{ group['gName'] }}</h1>
   <p>예산(1인): {{ group['budget'] }} / 인원: {{ group['cnt_members'] }}</p>
 
-  <h2>멤버</h2>
+  <h2>멤버
+  <a href="/group_members/new/?gID={{ group['gID'] }}"class="mycolor"> + 멤버 추가</a>
+  </h2>
   {% if members %}
     <ul>
     {% for m in members %}
@@ -20,13 +38,12 @@
     <p>아직 멤버가 없습니다.</p>
   {% endif %}
 
-  <p>
-    <a href="/group_members/new/?gID={{ group['gID'] }}">사용자 그룹에 추가</a>
-  </p>
+  
 
   <p>
-    <a href="/groups/{{ group['gID'] }}/dates/">가능 날짜 선택하러 가기</a> 
-    <a href="/">← Home으로</a>
+    <a href="/groups/{{ group['gID'] }}/dates/"class="mycolor">날짜 선택하러 가기</a> 
+    <br>
+    <a href="/"class="mycolor">🏠Home으로</a>
   </p>
 </body>
 </html>

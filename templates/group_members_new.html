@@ -3,6 +3,37 @@
 <head>
   <meta charset="utf-8">
   <title>그룹에 사용자 추가</title>
+  <style>
+  html{
+      font-size: 25px;
+    }
+  body{
+    text-align: center;
+  }
+  ul{
+    list-style-position: inside;
+    padding: 0;
+    text-align: center;
+  }
+  button {   
+  padding: 1px 4px;     
+  margin-left: 6px;
+  background-color:rgb(255, 255, 255);
+  border: 1px solid #29abc2;
+  border-radius: 6px;
+  }
+  input{
+    background-color: white;
+    border:1.5px solid #29abc2;
+  }
+  select{
+    background-color: white;
+    border:1.5px solid #29abc2;
+  }
+  .mycolor{
+    color: #29abc2;
+  }
+</style>
 </head>
 <body>
 
@@ -37,6 +68,6 @@
 
   <button type="submit">추가</button>
 </form>
-  <p><a href="/groups/{{ gID }}">← 그룹 상세로 돌아가기</a></p>
+  <p><a href="/groups/{{ gID }}"class="mycolor">← 그룹 상세로</a></p>
 </body>
 </html>

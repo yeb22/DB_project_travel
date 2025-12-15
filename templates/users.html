@@ -3,11 +3,26 @@
     <head>
         <meta charset="utf-8">
         <title>사용자 목록</title>
+         <style>
+  html{
+      font-size: 25px;
+    }
+  body{
+    text-align: center;
+  }
+  ul{
+    list-style-position: inside;
+    padding: 0;
+    text-align: center;
+  }
+  .mycolor{
+    color: #29abc2;
+  }
+</style>
     </head>
     <body>
-
-        <p><a href="/users/new/">+사용자 추가</a></p>
-        <h1>사용자 목록</h1>
+        <h1>사용자 목록 </h1>
+        <p><a href="/users/new/"class="mycolor">+사용자 추가</a></p>
         {% if users %}
         <ul>
         {% for user in users %}
@@ -20,6 +35,6 @@
     {% else %}
         <p>등록된 사용자가 없습니다.</p>
     {% endif %}
-    <p><a href="/">Home으로</a></p>
+    <p><a href="/"class="mycolor">🏠Home으로</a></p>
     </body>
 </html>

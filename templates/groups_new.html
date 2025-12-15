@@ -3,6 +3,37 @@
 <head>
   <meta charset="utf-8">
   <title>그룹 추가</title>
+  <style>
+  html{
+      font-size: 25px;
+    }
+  body{
+    text-align: center;
+  }
+  ul{
+    list-style-position: inside;
+    padding: 0;
+    text-align: center;
+  }
+  button {   
+  padding: 1px 4px;     
+  margin-left: 6px;
+  background-color:rgb(255, 255, 255);
+  border: 1px solid #29abc2;
+  border-radius: 6px;
+  }
+  input{
+    background-color: white;
+    border:1.5px solid #29abc2;
+  }
+  select{
+    background-color: white;
+    border:1.5px solid #29abc2;
+  }
+  .mycolor{
+    color:#29abc2;
+  }
+</style>
 </head>
 <body>
 
@@ -27,9 +58,9 @@
     <p>
       인원 수: <input type="number" name="cnt_members" min="1">
     </p>
-    <button type="submit">저장</button>
+    <button type="submit" >저장</button>
   </form>
 
-  <p><a href="/">그룹 목록으로</a></p>
+  <p><a href="/" class="mycolor">그룹 목록으로</a></p>
 </body>
 </html>

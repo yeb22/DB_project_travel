@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <title>공통 날짜</title>
+ <style>
+  html{
+      font-size: 25px;
+    }
+  body{
+    text-align: center;
+  }
+  ul{
+    list-style-position: inside;
+    padding: 0;
+    text-align: center;
+  }
+  
+  .mycolor{
+    color: #29abc2;
+  }
+</style>
 </head>
 <body>
-  <p>
-    <a href="/groups/{{gID}}/dates/">가능 날짜</a>
-    <a href="/groups/{{ gID }}/recommend/">이 그룹 추천 보기</a>
-    <a href="/groups/{{ gID }}">그룹 상세로</a>
-
-  </p>
 
   <h1>공통 날짜</h1>
 
@@ -27,6 +35,8 @@
   {% else %}
     <p>모든 사용자가 가능한 공통 날짜가 없습니다.</p>
   {% endif %}
-
+  <a href="/groups/{{ gID }}/recommend/"class="mycolor">여행지 추천</a>
+  <br>
+  <a href="/groups/{{gID}}/dates/"class="mycolor">← 날짜 목록으로</a>
 </body>
 </html>

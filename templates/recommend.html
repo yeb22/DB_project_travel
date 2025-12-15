@@ -3,6 +3,23 @@
 <head>
   <meta charset="utf-8">
   <title>여행지 추천</title>
+   <style>
+  html{
+      font-size: 25px;
+    }
+  body{
+    text-align: center;
+  }
+  ul{
+    list-style-position: inside;
+    padding: 0;
+    text-align: center;
+  }
+  
+  .mycolor{
+    color: #29abc2;
+  }
+</style>
 </head>
 <body>
 
@@ -37,7 +54,7 @@
     <p>공통 날짜가 없어 추천할 수 없습니다.</p>
   {% endif %}
 
-  <p><a href="/groups/{{ group['gID'] }}">← 그룹 상세로 돌아가기</a></p>
+  <p><a href="/groups/{{ group['gID'] }}"class="mycolor">← 그룹 상세로</a></p>
 
 </body>
 </html>

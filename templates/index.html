@@ -4,9 +4,52 @@
   <meta charset="utf-8">
   <title>Travel Plan</title>
   <style>
-    .container { display: flex; gap: 40px; }
-    .box { width: 45%; }
-  </style>
+    html{
+      font-size: 25px;
+    }
+  body {
+    font-family: Arial, sans-serif;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+  }
+  .box {
+  width: 45%;
+  padding: 20px;
+  border: 1px solid #29abc2;
+  border-radius: 8px;
+  text-align: center; 
+}
+.box ul {
+  display: inline-block; 
+  text-align: left;   
+  padding-left: 20px;
+}
+.box li {
+  margin-bottom: 10px;
+}
+button {   
+  padding: 1px 4px;     
+  margin-left: 6px;
+  background-color:rgb(255, 255, 255);
+  border: 1px solid #29abc2;
+  border-radius: 6px;
+}
+.mycolor{
+  color: #29abc2;
+}
+.myblack{
+  color:black
+}
+
+</style>
 </head>
 <body>
 
@@ -15,12 +58,12 @@
 <div class="container">
   
   <div class="box">
-    <h2>그룹</h2>
-    <a href="/groups/new/">+ 그룹 추가</a>
+    <h2>그룹 <a href="/groups/new/"class="mycolor">+ 그룹 추가</a></h2>
+    
     <ul>
       {% for g in groups %}
         <li>
-            <a href="/groups/{{ g['gID'] }}">{{ g['gName'] }}</a>
+            <a href="/groups/{{ g['gID'] }}" class="myblack">{{ g['gName'] }}</a>
 
             <form action="/groups/{{ g['gID'] }}/delete/" method="post" style="display:inline;">
                 <input type="hidden" name="next_url" value="/">
@@ -34,8 +77,8 @@
   </div>
 
   <div class="box">
-    <h2>사용자</h2>
-    <a href="/users/new/">+ 사용자 추가</a>
+    <h2>사용자 <a href="/users/new/"class="mycolor">+ 사용자 추가</a></h2>
+    
     <ul>
       {% for u in users %}
         <li>
