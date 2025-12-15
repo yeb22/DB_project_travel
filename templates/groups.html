@@ -5,6 +5,8 @@
   <title>그룹 목록</title>
 </head>
 <body>
+  {% include "nav.html" %}
+
   <p><a href="/groups/new/">+ 그룹 추가</a> | <a href="/users/">사용자 목록</a></p>
 
   <h1>그룹 목록</h1>
@@ -13,9 +15,11 @@
     <ul>
     {% for g in groups %}
       <li>
-        {{ g['gName'] }} /
+        <a href="/groups/{{ g['gID'] }}">{{ g['gName'] }}</a> /
         예산(1인): {{ g['budget'] }} /
         인원: {{ g['cnt_members'] }}
+        <a href="/groups/{{ g['gID'] }}/common_dates/">공통날짜</a>
+        <a href="/groups/{{ g['gID'] }}/recommend/">추천</a>
       </li>
     {% endfor %}
     </ul>

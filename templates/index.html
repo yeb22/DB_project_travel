@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>Travel Plan</title>
+  <style>
+    .container { display: flex; gap: 40px; }
+    .box { width: 45%; }
+  </style>
+</head>
+<body>
+
+<h1>WHEN & WHERE TO GO?</h1>
+
+<div class="container">
+  
+  <div class="box">
+    <h2>그룹</h2>
+    <a href="/groups/new/">+ 그룹 추가</a>
+    <ul>
+      {% for g in groups %}
+        <li>
+          <a href="/groups/{{ g['gID'] }}">{{ g['gName'] }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>사용자</h2>
+    <a href="/users/new/">+ 사용자 추가</a>
+    <ul>
+      {% for u in users %}
+        <li>{{ u['uName'] }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

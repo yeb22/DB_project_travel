@@ -5,7 +5,6 @@ import sqlite3
 app = Flask(__name__, template_folder="templates")
 
 #user
-@app.route('/')
 @app.route('/users/')
 def showUsers():
     db=sqlite3.connect('db.sqlite')
@@ -97,6 +96,8 @@ def showGroupMembers():
 
 @app.route('/group_members/new/')
 def newGroupMember():
+    gID = request.args.get("gID")
+
     db = sqlite3.connect('db.sqlite')
     db.row_factory = sqlite3.Row
     cursor = db.cursor()
@@ -104,13 +105,28 @@ def newGroupMember():
     groups = cursor.execute("SELECT gID, gName FROM Groups ORDER BY gID DESC").fetchall()
     users = cursor.execute("SELECT uID, uName FROM Users ORDER BY uID DESC").fetchall()
 
+    selected_group = None
+    if gID:
+        selected_group = cursor.execute(
+            "SELECT gID, gName FROM Groups WHERE gID = ?",
+            (gID,)
+        ).fetchone()
+
     db.close()
-    return render_template('group_members_new.html', groups=groups, users=users)
+    return render_template(
+        'group_members_new.html',
+        groups=groups,
+        users=users,
+        gID=gID,
+        selected_group=selected_group
+    )
+
 
 @app.route('/group_members/create/', methods=['POST'])
 def createGroupMember():
     gID = request.form['gID']
     uID = request.form['uID']
+    next_url = request.form.get("next")
 
     db = sqlite3.connect('db.sqlite')
     cursor = db.cursor()
@@ -122,6 +138,8 @@ def createGroupMember():
 
     db.commit()
     db.close()
+    if next_url:
+        return redirect(next_url)
     return redirect(url_for('showGroupMembers'))
 
 #date
@@ -143,21 +161,34 @@ def showDates():
 
 @app.route('/dates/new/')
 def newDate():
+    gID = request.args.get("gID")
+
     db = sqlite3.connect('db.sqlite')
     db.row_factory = sqlite3.Row
     cursor = db.cursor()
 
-    users = cursor.execute(
-        "SELECT uID, uName FROM Users ORDER BY uID"
-    ).fetchall()
+    if gID:
+        users = cursor.execute("""
+            SELECT u.uID, u.uName
+            FROM Group_members gm
+            JOIN Users u ON gm.uID = u.uID
+            WHERE gm.gID = ?
+            ORDER BY u.uName
+        """, (gID,)).fetchall()
+    else:
+        users = cursor.execute(
+            "SELECT uID, uName FROM Users ORDER BY uID"
+        ).fetchall()
 
     db.close()
-    return render_template('dates_new.html', users=users)
+    return render_template('dates_new.html', users=users, gID=gID)
 
 @app.route('/dates/create/', methods=['POST'])
 def createDate():
     uID = request.form['uID']
     date = request.form['date']
+
+    next_url = request.form.get("next_url")
 
     db = sqlite3.connect('db.sqlite')
     cursor = db.cursor()
@@ -169,7 +200,10 @@ def createDate():
 
     db.commit()
     db.close()
+    if next_url:
+        return redirect(next_url)
     return redirect(url_for('showDates'))
+
 
 #commom dates
 @app.route('/groups/<int:gID>/common_dates/')
@@ -245,6 +279,71 @@ def recommendByGroup(gID):
     db.close()
 
     return render_template("recommend.html", group=group, months=months, rows=rows)
+#첫 페이지
+@app.route("/")
+def index():
+    db = sqlite3.connect("db.sqlite")
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+
+    groups = cur.execute("SELECT gID, gName FROM Groups").fetchall()
+    users = cur.execute("SELECT uID, uName FROM Users").fetchall()
+
+    db.close()
+    return render_template("index.html", groups=groups, users=users)
+#그룹 상세페이지
+@app.route("/groups/<int:gID>")
+def groupDetail(gID):
+    db = sqlite3.connect("db.sqlite")
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    group = cursor.execute(
+        "SELECT gID, gName, budget, cnt_members FROM Groups WHERE gID = ?",
+        (gID,)
+    ).fetchone()
+
+    if not group:
+        db.close()
+        return "Group not found", 404
+
+    members = cursor.execute("""
+        SELECT u.uID, u.uName
+        FROM Group_members gm
+        JOIN Users u ON gm.uID = u.uID
+        WHERE gm.gID = ?
+        ORDER BY u.uName
+    """, (gID,)).fetchall()
+
+    db.close()
+    return render_template("group_detail.html", group=group, members=members)
+#그룹 날짜페이지
+@app.route("/groups/<int:gID>/dates/")
+def groupDates(gID):
+    db = sqlite3.connect("db.sqlite")
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
+    group = cursor.execute(
+        "SELECT gID, gName, budget, cnt_members FROM Groups WHERE gID = ?",
+        (gID,)
+    ).fetchone()
+
+    if not group:
+        db.close()
+        return "Group not found", 404
+
+    dates = cursor.execute("""
+        SELECT u.uName, d.date
+        FROM Group_members gm
+        JOIN Users u ON gm.uID = u.uID
+        JOIN UDate d ON d.uID = u.uID
+        WHERE gm.gID = ?
+        ORDER BY d.date, u.uName
+    """, (gID,)).fetchall()
+
+    db.close()
+    return render_template("group_dates.html", group=group, dates=dates, gID=gID)
 
 if __name__ == '__main__':
     app.debug = True

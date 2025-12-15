@@ -8,6 +8,9 @@
   <h1>가능 날짜 추가</h1>
 
   <form action="/dates/create/" method="post">
+  {% if gID %}
+    <input type="hidden" name="next_url" value="/groups/{{ gID }}/dates/">
+  {% endif %}
     <p>
       사용자 선택:
       <select name="uID" required>
@@ -27,6 +30,11 @@
     <button type="submit">저장</button>
   </form>
 
+  {% if gID %}
+  <p><a href="/groups/{{ gID }}/dates/">← 그룹 날짜로 돌아가기</a></p>
+  {% else %}
   <p><a href="/dates/">날짜 목록으로</a></p>
+  {% endif %}
+
 </body>
 </html>

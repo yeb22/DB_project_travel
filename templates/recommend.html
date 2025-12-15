@@ -5,6 +5,7 @@
         <title>여행지 추천</title>
     </head>
     <body>
+
         <h1>
             여행지 추천
         </h1>
@@ -28,5 +29,6 @@
         {% else %}
         <p>공통 날짜가 없어 추천할 수 없습니다.</p>
         {% endif %}
+        <p><a href="/groups/{{ group['gID'] }}">← 그룹 상세로 돌아가기</a></p>
     </body>
 </html>

@@ -5,9 +5,17 @@
   <title>그룹에 사용자 추가</title>
 </head>
 <body>
+
   <h1>그룹에 사용자 추가</h1>
 
   <form action="/group_members/create/" method="post">
+
+  {% if gID %}
+    <input type="hidden" name="gID" value="{{ gID }}">
+    <input type="hidden" name="next" value="/groups/{{ gID }}">
+    <p>그룹이 선택되어 있습니다: <strong>{{ selected_group['gName'] }}</strong></p>
+
+  {% else %}
     <p>
       그룹 선택:
       <select name="gID" required>
@@ -16,19 +24,19 @@
         {% endfor %}
       </select>
     </p>
+  {% endif %}
 
-    <p>
-      사용자 선택:
-      <select name="uID" required>
-        {% for u in users %}
-          <option value="{{ u['uID'] }}">{{ u['uName'] }}</option>
-        {% endfor %}
-      </select>
-    </p>
+  <p>
+    사용자 선택:
+    <select name="uID" required>
+      {% for u in users %}
+        <option value="{{ u['uID'] }}">{{ u['uName'] }}</option>
+      {% endfor %}
+    </select>
+  </p>
 
-    <button type="submit">추가</button>
-  </form>
-
-  <p><a href="/group_members/">그룹 멤버 목록으로</a></p>
+  <button type="submit">추가</button>
+</form>
+  <p><a href="/groups/{{ gID }}">← 그룹 상세로 돌아가기</a></p>
 </body>
 </html>

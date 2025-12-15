@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>가능 날짜</title>
+</head>
+<body>
+
+  <h1>{{ group['gName'] }} - 가능 날짜</h1>
+
+  {% if dates %}
+    <ul>
+    {% for d in dates %}
+      <li>{{ d['date'] }} ({{ d['uName'] }})</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>등록된 가능 날짜가 없습니다.</p>
+  {% endif %}
+
+  <p>
+    <a href="/dates/new/?gID={{ group['gID'] }}">가능 날짜 추가</a>
+    <a href="/groups/{{ group['gID'] }}">← 그룹 상세</a>
+
+  </p>
+
+  <p>
+    <a href="/groups/{{ group['gID'] }}/common_dates/">공통 날짜 확인</a>
+    |
+    <a href="/groups/{{ group['gID'] }}/recommend/">추천 받기</a>
+  </p>
+</body>
+</html>
