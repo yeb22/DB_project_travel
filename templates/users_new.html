@@ -5,7 +5,6 @@
   <title>사용자 추가</title>
 </head>
 <body>
-  {% include "nav.html" %}
 
   <h1>사용자 추가</h1>
 
@@ -14,7 +13,12 @@
       이름: <input type="text" name="uName" required>
     </p>
     <p>
-      여행 취향: <input type="text" name="preference">
+      여행 취향: 
+      <select name="preference">
+      <option value="관광">관광</option>
+      <option value="휴양">휴양</option>
+      <option value="음식관광">음식관광</option>
+      </select>
     </p>
     <button type="submit">저장</button>
   </form>

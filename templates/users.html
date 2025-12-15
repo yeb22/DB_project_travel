@@ -5,7 +5,6 @@
         <title>사용자 목록</title>
     </head>
     <body>
-        {% include "nav.html" %}
 
         <p><a href="/users/new/">+사용자 추가</a></p>
         <h1>사용자 목록</h1>
@@ -21,6 +20,6 @@
     {% else %}
         <p>등록된 사용자가 없습니다.</p>
     {% endif %}
-
+    <p><a href="/">Home으로</a></p>
     </body>
 </html>
