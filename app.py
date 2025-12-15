@@ -37,7 +37,7 @@ def createUser():
     )
     db.commit()
     db.close()
-    return redirect(url_for('showUsers'))
+    return redirect(url_for('index'))
 
 #group
 @app.route('/groups/')
@@ -73,7 +73,8 @@ def createGroup():
 
     db.commit()
     db.close()
-    return redirect(url_for('showGroups'))
+    return redirect(url_for('index'))
+
 
 #group members
 
@@ -334,16 +335,48 @@ def groupDates(gID):
         return "Group not found", 404
 
     dates = cursor.execute("""
-        SELECT u.uName, d.date
-        FROM Group_members gm
-        JOIN Users u ON gm.uID = u.uID
-        JOIN UDate d ON d.uID = u.uID
-        WHERE gm.gID = ?
-        ORDER BY d.date, u.uName
+    SELECT d.dateID, u.uName, d.date
+    FROM Group_members gm
+    JOIN Users u ON gm.uID = u.uID
+    JOIN UDate d ON d.uID = u.uID
+    WHERE gm.gID = ?
+    ORDER BY d.date, u.uName
     """, (gID,)).fetchall()
+
 
     db.close()
     return render_template("group_dates.html", group=group, dates=dates, gID=gID)
+
+#삭제
+@app.route("/groups/<int:gID>/delete/", methods=["POST"])
+def deleteGroup(gID):
+    next_url = request.form.get("next_url", "/")
+    db = sqlite3.connect("db.sqlite")
+    cur = db.cursor()
+    cur.execute("DELETE FROM Groups WHERE gID=?", (gID,))
+    db.commit()
+    db.close()
+    return redirect(next_url)
+
+@app.route("/users/<int:uID>/delete/", methods=["POST"])
+def deleteUser(uID):
+    next_url = request.form.get("next_url", "/")
+    db = sqlite3.connect("db.sqlite")
+    cur = db.cursor()
+    cur.execute("DELETE FROM Users WHERE uID=?", (uID,))
+    db.commit()
+    db.close()
+    return redirect(next_url)
+
+@app.route("/dates/<int:dateID>/delete/", methods=["POST"])
+def deleteDate(dateID):
+    next_url = request.form.get("next_url", "/") 
+    db = sqlite3.connect("db.sqlite")
+    cur = db.cursor()
+    cur.execute("DELETE FROM UDate WHERE dateID = ?", (dateID,))
+    db.commit()
+    db.close()
+    return redirect(next_url)
 
 if __name__ == '__main__':
     app.debug = True
